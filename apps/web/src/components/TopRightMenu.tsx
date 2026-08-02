@@ -246,7 +246,7 @@ export function TopRightMenu() {
   return (
     <>
       <div 
-        className="absolute top-6 right-6 flex items-center gap-3 z-40 transition-all duration-700 ease-out delay-100"
+        className="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center gap-2 sm:gap-3 z-40 transition-all duration-700 ease-out delay-100"
         style={{
           opacity: isLandingDismissed ? 1 : 0,
           transform: `translateY(${isLandingDismissed ? '0' : '-16px'})`,
@@ -254,11 +254,11 @@ export function TopRightMenu() {
         }}
       >
         {isRoomPage && Object.values(cursors).length > 0 && (
-          <div className="flex items-center -space-x-3 mr-2">
+          <div className="flex items-center -space-x-3 mr-1 sm:mr-2">
             {Object.entries(cursors).map(([id, cursor]) => (
               <div 
                 key={id} 
-                className="w-10 h-10 rounded-full border-2 border-slate-900 bg-slate-800 flex items-center justify-center shadow-sm overflow-hidden relative group"
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-slate-900 bg-slate-800 flex items-center justify-center shadow-sm overflow-hidden relative group"
                 style={{ backgroundColor: cursor.color || '#333' }}
                 title={cursor.name || 'Anonymous'}
               >
@@ -273,7 +273,7 @@ export function TopRightMenu() {
         )}
 
         {isRoomPage && currentRoomId && (
-          <div className="flex items-center gap-2 px-4 py-2.5 bg-slate-800/70 backdrop-blur-md border border-slate-700/50 rounded-full text-slate-200 font-mono text-sm shadow-sm">
+          <div className="hidden md:flex items-center gap-2 px-4 py-2.5 bg-slate-800/70 backdrop-blur-md border border-slate-700/50 rounded-full text-slate-200 font-mono text-sm shadow-sm">
             <span className="text-slate-400 font-sans text-sm">Room:</span> {currentRoomId}
             <button 
               onClick={async () => {
@@ -296,10 +296,10 @@ export function TopRightMenu() {
 
         <button 
           onClick={handleShareClick}
-          className="flex items-center gap-2 px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-full font-medium shadow-[0_4px_14px_rgba(13,148,136,0.3)] transition-all active:scale-95"
+          className="flex items-center gap-2 px-3 py-2 sm:px-5 sm:py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-full font-medium shadow-[0_4px_14px_rgba(13,148,136,0.3)] transition-all active:scale-95"
         >
-          <Share className="w-4 h-4" />
-          <span>Share</span>
+          <Share className="w-4 h-4 sm:w-4 sm:h-4" />
+          <span className="hidden sm:inline">Share</span>
         </button>
 
         <div className="relative">
