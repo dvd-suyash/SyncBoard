@@ -4,6 +4,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "db:generate": "prisma generate",
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/"
