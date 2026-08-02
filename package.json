@@ -11,7 +11,7 @@
     "build": "npm run build --workspaces",
     "lint": "npm run lint --workspaces",
     "typecheck": "npm run typecheck --workspaces",
-    "postinstall": "npm run db:generate --workspace=@syncboard/shared"
+    "postinstall": "npm run db:generate --workspace=@syncboard/shared && npm run build --workspace=@syncboard/shared"
   },
   "devDependencies": {
     "concurrently": "^9.2.4"
