@@ -10,7 +10,8 @@
     "dev": "concurrently \"npm run dev -w web\" \"npm run dev -w @syncboard/realtime\"",
     "build": "npm run build --workspaces",
     "lint": "npm run lint --workspaces",
-    "typecheck": "npm run typecheck --workspaces"
+    "typecheck": "npm run typecheck --workspaces",
+    "postinstall": "npm run db:generate --workspace=@syncboard/shared"
   },
   "devDependencies": {
     "concurrently": "^9.2.4"
