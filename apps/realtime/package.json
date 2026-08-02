@@ -1,6 +1,7 @@
 {
   "name": "@syncboard/realtime",
   "version": "1.0.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
