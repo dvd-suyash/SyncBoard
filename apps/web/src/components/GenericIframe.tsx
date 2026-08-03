@@ -253,6 +253,7 @@ export function GenericIframe({ el, isSelected, activeTool, isInteractive }: Gen
         src={el.url} 
         className="w-full h-full border-0 rounded-2xl bg-black" 
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        sandbox="allow-scripts allow-same-origin allow-presentation"
         allowFullScreen 
       />
 
