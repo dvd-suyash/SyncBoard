@@ -25,6 +25,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { commandManager, AddElementCommand } from '../lib/commands';
 import { ShortcutsModal } from './ui/ShortcutsModal';
 import { MovieSearchModal } from './ui/MovieSearchModal';
+import { toast } from 'sonner';
 
 const TOOLS: { id: ToolType; icon: React.ElementType; label: string }[] = [
   { id: 'select', icon: MousePointer2, label: 'Select' },
@@ -94,8 +95,19 @@ export function Toolbar() {
         setIsHelpOpen(prev => !prev);
       }
     };
+    
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data?.type === 'SYNCBOARD_BRIDGE_READY') {
+        (window as any).__SYNCBOARD_BRIDGE_INSTALLED = true;
+      }
+    };
+
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('message', handleMessage);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('message', handleMessage);
+    };
   }, []);
 
   const isVisible = isLandingDismissed && !isSharing;
@@ -190,6 +202,16 @@ export function Toolbar() {
             onClick={() => {
               setIsMediaMenuOpen(false);
               setIsMovieSearchOpen(true);
+              if (!(window as any).__SYNCBOARD_BRIDGE_INSTALLED) {
+                toast.info('Want perfect video syncing?', {
+                  description: 'Install the SyncBoard Bridge extension to perfectly sync media playback with your team.',
+                  action: {
+                    label: 'Get Extension',
+                    onClick: () => window.open('https://addons.mozilla.org', '_blank')
+                  },
+                  duration: 8000
+                });
+              }
             }}
             className="px-4 py-3 text-left text-sm text-slate-200 hover:bg-slate-700 flex items-center gap-2 transition-colors"
           >
@@ -241,6 +263,17 @@ export function Toolbar() {
 
               state.addElement(iframeEl as any);
               commandManager.pushCommand(new AddElementCommand(iframeEl as any));
+
+              if (!(window as any).__SYNCBOARD_BRIDGE_INSTALLED) {
+                toast.info('Want perfect video syncing?', {
+                  description: 'Install the SyncBoard Bridge extension to perfectly sync media playback with your team.',
+                  action: {
+                    label: 'Get Extension',
+                    onClick: () => window.open('https://addons.mozilla.org', '_blank')
+                  },
+                  duration: 8000
+                });
+              }
             }}
             className="px-4 py-3 text-left text-sm text-slate-200 hover:bg-slate-700 flex items-center gap-2 transition-colors"
           >
