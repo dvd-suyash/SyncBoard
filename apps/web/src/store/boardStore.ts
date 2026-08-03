@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { BoardElement, ElementType } from '@syncboard/shared';
+import { BoardElement, ElementType } from '@/types/shared';
 
 export type ToolType = 'select' | 'hand' | 'eraser' | ElementType;
 

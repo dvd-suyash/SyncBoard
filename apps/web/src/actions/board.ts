@@ -1,7 +1,7 @@
 'use server';
 
 import { prisma } from '../lib/db';
-import { BoardElement } from '@syncboard/shared';
+import { BoardElement } from '@/types/shared';
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
 

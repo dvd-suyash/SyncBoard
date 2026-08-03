@@ -5,7 +5,7 @@ import { useBoardStore } from '../store/boardStore';
 import { getSocket } from '../lib/socket';
 import { screenToWorld, getElementAtPoint } from '../lib/math';
 import { v4 as uuidv4 } from 'uuid';
-import { BoardElement, FreehandElement, LineElement, ArrowElement, TextElement } from '@syncboard/shared';
+import { BoardElement, FreehandElement, LineElement, ArrowElement, TextElement } from '@/types/shared';
 import { commandManager, AddElementCommand, DeleteElementsCommand, UpdateElementsCommand } from '../lib/commands';
 import { TextEditorOverlay } from './TextEditorOverlay';
 import { SyncedYouTube } from './SyncedYouTube';

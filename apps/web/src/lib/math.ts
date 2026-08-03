@@ -1,4 +1,4 @@
-import { Point, BoardElement, FreehandElement, LineElement, TextElement } from '@syncboard/shared';
+import { Point, BoardElement, FreehandElement, LineElement, TextElement } from '@/types/shared';
 
 export function screenToWorld(
   screenPoint: Point,

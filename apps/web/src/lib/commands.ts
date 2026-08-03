@@ -1,4 +1,4 @@
-import { BoardElement } from '@syncboard/shared';
+import { BoardElement } from '@/types/shared';
 import { useBoardStore } from '../store/boardStore';
 
 export interface Command {

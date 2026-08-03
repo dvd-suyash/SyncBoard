@@ -11,9 +11,13 @@
     "build": "npm run build --workspaces",
     "lint": "npm run lint --workspaces",
     "typecheck": "npm run typecheck --workspaces",
-    "postinstall": "npm run db:generate --workspace=@syncboard/shared && npm run build --workspace=@syncboard/shared"
+    "postinstall": "prisma generate --schema=packages/shared/prisma/schema.prisma"
   },
   "devDependencies": {
-    "concurrently": "^9.2.4"
+    "concurrently": "^9.2.4",
+    "prisma": "^6.19.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3"
   }
 }

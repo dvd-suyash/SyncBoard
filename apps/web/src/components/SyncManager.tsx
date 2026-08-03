@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useBoardStore, Cursor } from '../store/boardStore';
 import { saveElements } from '../actions/board';
-import { BoardElement } from '@syncboard/shared';
+import { BoardElement } from '@/types/shared';
 import { getSocket } from '../lib/socket';
 
 export function SyncManager({ boardId }: { boardId: string }) {

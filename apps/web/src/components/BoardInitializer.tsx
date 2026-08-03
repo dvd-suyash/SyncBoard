@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { useBoardStore } from '../store/boardStore';
-import { BoardElement } from '@syncboard/shared';
+import { BoardElement } from '@/types/shared';
 import { SyncManager } from './SyncManager';
 
 export function BoardInitializer({ boardId, initialElements }: { boardId: string, initialElements: BoardElement[] }) {
