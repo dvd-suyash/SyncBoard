@@ -264,6 +264,10 @@ export function Toolbar() {
               state.addElement(iframeEl as any);
               commandManager.pushCommand(new AddElementCommand(iframeEl as any));
 
+              toast.success('Video Added!', {
+                description: 'Double click the video player to access playback controls (Play, Pause, etc).'
+              });
+
               if (!(window as any).__SYNCBOARD_BRIDGE_INSTALLED) {
                 toast.info('Want perfect video syncing?', {
                   description: 'Install the SyncBoard Bridge extension to perfectly sync media playback with your team.',

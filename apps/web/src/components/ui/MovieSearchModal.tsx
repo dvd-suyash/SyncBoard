@@ -62,8 +62,9 @@ export function MovieSearchModal({ isOpen, onClose }: MovieSearchModalProps) {
     state.addElement(iframeEl as any);
     commandManager.pushCommand(new AddElementCommand(iframeEl as any));
     onClose();
-    toast.success(`Spawned ${item.title || item.name}!`);
-  };
+    toast.success(`Spawned ${item.title || item.name}!`, {
+      description: 'Double click the video player to access playback controls (Play, Pause, etc).'
+    });
 
   if (!isOpen) return null;
 
