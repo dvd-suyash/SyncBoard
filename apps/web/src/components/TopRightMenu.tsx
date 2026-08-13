@@ -79,6 +79,12 @@ export function TopRightMenu() {
   };
 
   const confirmShare = async () => {
+    if (!session) {
+      localStorage.setItem('syncboard_intent', 'share');
+      await loginWithGoogle();
+      return;
+    }
+
     try {
       if (isRoomPage && currentRoomId) {
         const url = `${window.location.origin}/board/${currentRoomId}`;
