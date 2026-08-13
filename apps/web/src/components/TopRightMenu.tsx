@@ -104,16 +104,9 @@ export function TopRightMenu() {
       
       const newRoomId = await createRoomFromLocal(elements as any, allowEdit);
       
-      const url = `${window.location.origin}/board/${newRoomId}`;
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      
-      setTimeout(() => {
-        router.push(`/board/${newRoomId}`);
-        setIsSharing(false);
-        setCopied(false);
-      }, 1000);
-      
+      toast.success("Room created! Redirecting...");
+      router.push(`/board/${newRoomId}`);
+      setIsSharing(false);
       
     } catch (e) {
       toast.error("Error creating room!");
@@ -420,7 +413,7 @@ export function TopRightMenu() {
             </button>
             
             <h2 className="text-xl font-bold text-slate-100 mb-2">
-              {isRoomPage ? 'Share this room' : 'Share Board'}
+              {isRoomPage ? 'Share this room' : 'Create Live Room'}
             </h2>
             <p className="text-sm text-slate-400 mb-6">
               {isRoomPage ? 'Share the link with others to collaborate.' : 'Create a live collaborative room from your current canvas.'}
@@ -449,7 +442,7 @@ export function TopRightMenu() {
               ) : isRoomPage ? (
                 'Copy Link'
               ) : (
-                'Create Room & Copy Link'
+                'Create Live Room'
               )}
             </button>
           </div>
