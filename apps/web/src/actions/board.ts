@@ -1,5 +1,6 @@
 'use server';
 
+
 import { prisma } from '../lib/db';
 import { BoardElement } from '@/types/shared';
 import { redirect } from 'next/navigation';
@@ -48,7 +49,7 @@ export async function createRoomFromLocal(elements: BoardElement[], allowEdit: b
   
   // Save local elements to the new board
   if (elements && elements.length > 0) {
-    await saveElements(newId, elements);
+    await saveNewElements(newId, elements);
   }
   
   return newId;
@@ -111,6 +112,32 @@ export async function saveElements(boardId: string, elements: BoardElement[]) {
   });
   
   await prisma.$transaction(ops);
+  return true;
+}
+
+export async function saveNewElements(boardId: string, elements: BoardElement[]) {
+  if (!elements.length) return true;
+
+  const dataToInsert = elements.map(el => {
+    const { id, type, version, authorId, createdAt, updatedAt, isDeleted, ...data } = el;
+    return {
+      id: el.id,
+      boardId,
+      type: el.type,
+      version: el.version,
+      authorId: el.authorId,
+      createdAt: new Date(el.createdAt),
+      updatedAt: new Date(el.updatedAt),
+      isDeleted: el.isDeleted,
+      data: data as any,
+    };
+  });
+
+  await prisma.element.createMany({
+    data: dataToInsert,
+    skipDuplicates: true,
+  });
+
   return true;
 }
 
