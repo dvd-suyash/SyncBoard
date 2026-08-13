@@ -65,6 +65,7 @@ export function MovieSearchModal({ isOpen, onClose }: MovieSearchModalProps) {
     toast.success(`Spawned ${item.title || item.name}!`, {
       description: 'Double click the video player to access playback controls (Play, Pause, etc).'
     });
+  };
 
   if (!isOpen) return null;
 
