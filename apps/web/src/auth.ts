@@ -14,6 +14,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
   secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+      console.log("[AUTH_DEBUG] signIn callback started", { email: user?.email });
+      try {
+        // Just a quick check to see if DB is reachable
+        await prisma.$queryRaw`SELECT 1`;
+        console.log("[AUTH_DEBUG] Database is reachable!");
+        return true;
+      } catch (error) {
+        console.error("[AUTH_DEBUG] DATABASE CONNECTION ERROR:", error);
+        return true; // still return true so nextauth throws the real error for us to see
+      }
+    },
     session: async ({ session, user }) => {
       if (session.user) {
         session.user.id = user.id;
@@ -21,4 +33,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session;
     },
   },
+  debug: true,
 });
