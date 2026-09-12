@@ -404,7 +404,7 @@ export function TopRightMenu() {
               />
             </div>
             
-            <div className="w-[400px] bg-slate-900/90 backdrop-blur-2xl border border-slate-700/50 shadow-2xl rounded-3xl p-8 flex flex-col relative overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="w-[400px] max-w-[90vw] bg-slate-900/90 backdrop-blur-2xl border border-slate-700/50 shadow-2xl rounded-3xl p-8 flex flex-col relative overflow-hidden animate-in fade-in zoom-in-95 duration-200">
               <button 
               onClick={() => setIsSharing(false)}
               className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-full transition-colors"
@@ -452,7 +452,7 @@ export function TopRightMenu() {
 
       {isJoinModalOpen && (
         <div className="absolute inset-0 z-[100] flex items-center justify-center transition-all overflow-hidden bg-black/60 backdrop-blur-sm">
-          <div className="relative z-10 w-[400px] bg-slate-900/90 backdrop-blur-2xl border border-slate-700/50 shadow-2xl rounded-3xl p-8 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+          <div className="relative z-10 w-[400px] max-w-[90vw] bg-slate-900/90 backdrop-blur-2xl border border-slate-700/50 shadow-2xl rounded-3xl p-8 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             <button 
               onClick={() => setIsJoinModalOpen(false)}
               className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-full transition-colors"

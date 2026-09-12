@@ -63,6 +63,11 @@ export function Canvas() {
   
   const [isSpaceDown, setIsSpaceDown] = useState(false);
   const lastPointerPos = useRef<{x: number, y: number} | null>(null);
+  const activePointers = useRef<Map<number, {x: number, y: number}>>(new Map());
+  const initialPinchDist = useRef<number | null>(null);
+  const initialPinchZoom = useRef<number | null>(null);
+  const lastPanCenter = useRef<{x: number, y: number} | null>(null);
+  const lastSinglePan = useRef<{x: number, y: number} | null>(null);
 
   // Keyboard events
   useEffect(() => {
@@ -599,12 +604,33 @@ export function Canvas() {
 
   const handlePointerDown = (e: React.PointerEvent) => {
     (e.target as Element).setPointerCapture(e.pointerId);
+    activePointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+    if (activePointers.current.size === 2) {
+      const pts = Array.from(activePointers.current.values());
+      const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+      initialPinchDist.current = dist;
+      initialPinchZoom.current = camera.zoom;
+      lastPanCenter.current = {
+        x: (pts[0].x + pts[1].x) / 2,
+        y: (pts[0].y + pts[1].y) / 2
+      };
+      // Cancel drawing if we were drawing with one finger
+      if (isDrawing && currentElementId) {
+        commandManager.executeCommand(new DeleteElementsCommand([currentElementId]));
+        setIsDrawing(false);
+        setCurrentElementId(null);
+      }
+      return;
+    }
+
     if (e.button !== 0 && e.button !== 1) return;
     
     // Reset interactive iframe on any click on the canvas
     setInteractiveIframeId(null);
 
     const worldPt = screenToWorld({ x: e.clientX, y: e.clientY }, camera);
+    lastSinglePan.current = { x: e.clientX, y: e.clientY };
 
     if (activeTool === 'hand' || isSpaceDown || e.button === 1) {
        setIsDrawing(true);
@@ -721,32 +747,55 @@ export function Canvas() {
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
+    if (activePointers.current.has(e.pointerId)) {
+      activePointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    }
+
+    if (activePointers.current.size === 2) {
+      const pts = Array.from(activePointers.current.values());
+      const currentDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+      const currentCenter = { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 };
+
+      if (initialPinchDist.current !== null && initialPinchZoom.current !== null) {
+        const scale = currentDist / initialPinchDist.current;
+        const newZoom = Math.min(Math.max(0.1, initialPinchZoom.current * scale), 5);
+        
+        let dx = 0;
+        let dy = 0;
+        if (lastPanCenter.current) {
+          dx = currentCenter.x - lastPanCenter.current.x;
+          dy = currentCenter.y - lastPanCenter.current.y;
+        }
+
+        setCamera(prev => ({ ...prev, x: prev.x + dx, y: prev.y + dy, zoom: newZoom }));
+      }
+      lastPanCenter.current = currentCenter;
+      return;
+    }
+
     const worldPt = screenToWorld({ x: e.clientX, y: e.clientY }, camera);
 
     // Throttle cursor emit
     const socket = getSocket();
     if (socket.connected && boardId) {
-      // Very basic throttle for cursor emit (ideally use a real throttle function)
       if (Math.random() < 0.3) {
         socket.emit('cursor-move', { 
           boardId, 
-          cursor: { 
-            x: worldPt.x, 
-            y: worldPt.y, 
-            color: '#3b82f6',
-            name: session?.user?.name || 'Anonymous',
-            avatar: session?.user?.image || undefined
-          } 
+          cursor: { x: worldPt.x, y: worldPt.y, color: '#3b82f6', name: session?.user?.name || 'Anonymous', avatar: session?.user?.image || undefined } 
         });
       }
     }
 
     if (activeTool === 'hand' || isSpaceDown || e.buttons === 4) {
-      if (isDrawing) {
-        setCamera(prev => ({ ...prev, x: prev.x + e.movementX, y: prev.y + e.movementY }));
+      if (isDrawing && lastSinglePan.current) {
+        const dx = e.clientX - lastSinglePan.current.x;
+        const dy = e.clientY - lastSinglePan.current.y;
+        setCamera(prev => ({ ...prev, x: prev.x + dx, y: prev.y + dy }));
       }
+      lastSinglePan.current = { x: e.clientX, y: e.clientY };
       return;
     }
+    lastSinglePan.current = { x: e.clientX, y: e.clientY };
 
     if (activeTool === 'eraser' && isDrawing) {
        const hitElement = getElementAtPoint(worldPt, Object.values(elements), camera.zoom);
@@ -816,7 +865,15 @@ export function Canvas() {
     }
   };
 
-  const handlePointerUp = () => {
+  const handlePointerUp = (e: React.PointerEvent) => {
+    activePointers.current.delete(e.pointerId);
+    
+    if (activePointers.current.size < 2) {
+      initialPinchDist.current = null;
+      initialPinchZoom.current = null;
+      lastPanCenter.current = null;
+    }
+
     if (isDrawing && currentElementId) {
       const el = elements[currentElementId];
       if (el) {
@@ -858,6 +915,16 @@ export function Canvas() {
     setRotationInitialState(null);
     setDragStartPoint(null);
     setDragInitialStates({});
+  };
+
+  const handlePointerCancel = (e: React.PointerEvent) => {
+    activePointers.current.delete(e.pointerId);
+    if (activePointers.current.size < 2) {
+      initialPinchDist.current = null;
+      initialPinchZoom.current = null;
+      lastPanCenter.current = null;
+    }
+    handlePointerUp(e);
   };
 
   const handleDoubleClick = (e: React.MouseEvent) => {
@@ -930,6 +997,7 @@ export function Canvas() {
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerCancel}
         onDoubleClick={handleDoubleClick}
         onContextMenu={(e) => e.preventDefault()}
         tabIndex={0} 
