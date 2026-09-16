@@ -16,7 +16,7 @@ export function MovieSearchModal({ isOpen, onClose }: MovieSearchModalProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [server, setServer] = useState<'vidsrc' | 'embedsu' | 'vidlink' | 'autoembed'>('vidsrc');
+  const [server, setServer] = useState<'vidsrc' | 'embedsu' | 'vidlink' | 'autoembed'>('vidlink');
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
