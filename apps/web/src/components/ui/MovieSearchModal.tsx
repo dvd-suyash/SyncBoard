@@ -39,7 +39,7 @@ export function MovieSearchModal({ isOpen, onClose }: MovieSearchModalProps) {
     
     let url = '';
     if (server === 'vidsrc') {
-      url = isTv ? `https://vidsrc.pro/embed/tv/${item.id}/1/1` : `https://vidsrc.pro/embed/movie/${item.id}`;
+      url = isTv ? `https://vidsrc.cc/v2/embed/tv/${item.id}/1/1` : `https://vidsrc.cc/v2/embed/movie/${item.id}`;
     } else if (server === 'embedsu') {
       url = isTv ? `https://embed.su/embed/tv/${item.id}/1/1` : `https://embed.su/embed/movie/${item.id}`;
     } else if (server === 'autoembed') {
@@ -95,7 +95,7 @@ export function MovieSearchModal({ isOpen, onClose }: MovieSearchModalProps) {
                 onChange={(e) => setServer(e.target.value as any)}
                 className="bg-slate-800 text-slate-200 border border-slate-700 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-indigo-500"
               >
-                <option value="vidsrc">Server 1 (VidSrc Pro)</option>
+                <option value="vidsrc">Server 1 (VidSrc CC)</option>
                 <option value="embedsu">Server 2 (Embed.su)</option>
                 <option value="autoembed">Server 3 (AutoEmbed)</option>
                 <option value="vidlink">Server 4 (VidLink)</option>
@@ -116,7 +116,7 @@ export function MovieSearchModal({ isOpen, onClose }: MovieSearchModalProps) {
                   onChange={(e) => setServer(e.target.value as any)}
                   className="w-full bg-slate-800 text-slate-200 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500"
                 >
-                  <option value="vidsrc">Server 1 (VidSrc Pro)</option>
+                  <option value="vidsrc">Server 1 (VidSrc CC)</option>
                   <option value="embedsu">Server 2 (Embed.su)</option>
                   <option value="autoembed">Server 3 (AutoEmbed)</option>
                   <option value="vidlink">Server 4 (VidLink)</option>

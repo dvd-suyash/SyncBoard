@@ -67,7 +67,7 @@ function MediaSidePanel({ mediaId, isTvShow, currentSeason, currentEpisode, curr
             onChange={(e) => onChangeServer(e.target.value)}
             className="w-full bg-slate-950 text-sm text-slate-200 border border-slate-700 hover:border-indigo-500 rounded-xl px-4 py-3 outline-none transition-all duration-200 focus:ring-2 focus:ring-indigo-500/30"
           >
-            <option value="vidsrc">Server 1 (VidSrc Pro)</option>
+            <option value="vidsrc">Server 1 (VidSrc CC)</option>
             <option value="embedsu">Server 2 (Embed.su)</option>
             <option value="autoembed">Server 3 (AutoEmbed)</option>
             <option value="vidlink">Server 4 (VidLink)</option>
@@ -197,8 +197,8 @@ export function GenericIframe({ el, isSelected, activeTool, isInteractive }: Gen
   if (el.url.includes('vidlink.pro/tv/')) {
     const m = el.url.match(/vidlink\.pro\/tv\/([^/]+)\/([^/]+)\/([^?]+)/);
     if (m) { isTvShow = true; mediaId = m[1]; currentSeason = parseInt(m[2]); currentEpisode = parseInt(m[3]); currentServer = 'vidlink'; }
-  } else if (el.url.includes('vidsrc.pro/embed/tv/')) {
-    const m = el.url.match(/vidsrc\.pro\/embed\/tv\/([^/]+)\/([^/]+)/);
+  } else if (el.url.includes('vidsrc.cc/v2/embed/tv/') || el.url.includes('vidsrc.pro/embed/tv/')) {
+    const m = el.url.match(/vidsrc\.(?:cc\/v2|pro)\/embed\/tv\/([^/]+)\/([^/]+)/);
     if (m) { isTvShow = true; mediaId = m[1]; currentSeason = parseInt(m[2]); currentEpisode = parseInt(m[3] || "1"); currentServer = 'vidsrc'; }
   } else if (el.url.includes('embed.su/embed/tv/')) {
     const m = el.url.match(/embed\.su\/embed\/tv\/([^/]+)\/([^/]+)\/([^?]+)/);
@@ -212,8 +212,8 @@ export function GenericIframe({ el, isSelected, activeTool, isInteractive }: Gen
     if (el.url.includes('vidlink.pro/movie/')) {
       const m = el.url.match(/vidlink\.pro\/movie\/([^?]+)/);
       if (m) { mediaId = m[1]; currentServer = 'vidlink'; }
-    } else if (el.url.includes('vidsrc.pro/embed/movie/')) {
-      const m = el.url.match(/vidsrc\.pro\/embed\/movie\/([^?]+)/);
+    } else if (el.url.includes('vidsrc.cc/v2/embed/movie/') || el.url.includes('vidsrc.pro/embed/movie/')) {
+      const m = el.url.match(/vidsrc\.(?:cc\/v2|pro)\/embed\/movie\/([^?]+)/);
       if (m) { mediaId = m[1]; currentServer = 'vidsrc'; }
     } else if (el.url.includes('embed.su/embed/movie/')) {
       const m = el.url.match(/embed\.su\/embed\/movie\/([^?]+)/);
@@ -288,7 +288,7 @@ export function GenericIframe({ el, isSelected, activeTool, isInteractive }: Gen
   const changeEpisodeAbsolute = (s: number, e: number) => {
     if (!isTvShow || !mediaId) return;
     let newUrl = '';
-    if (currentServer === 'vidsrc') newUrl = `https://vidsrc.pro/embed/tv/${mediaId}/${s}/${e}`;
+    if (currentServer === 'vidsrc') newUrl = `https://vidsrc.cc/v2/embed/tv/${mediaId}/${s}/${e}`;
     else if (currentServer === 'embedsu') newUrl = `https://embed.su/embed/tv/${mediaId}/${s}/${e}`;
     else if (currentServer === 'autoembed') newUrl = `https://autoembed.cc/embed/player.php?id=${mediaId}&s=${s}&e=${e}`;
     else newUrl = `https://vidlink.pro/tv/${mediaId}/${s}/${e}?primaryColor=6366f1&autoplay=false`;
@@ -299,12 +299,12 @@ export function GenericIframe({ el, isSelected, activeTool, isInteractive }: Gen
     if (!mediaId) return;
     let newUrl = '';
     if (isTvShow) {
-      if (newServer === 'vidsrc') newUrl = `https://vidsrc.pro/embed/tv/${mediaId}/${currentSeason}/${currentEpisode}`;
+      if (newServer === 'vidsrc') newUrl = `https://vidsrc.cc/v2/embed/tv/${mediaId}/${currentSeason}/${currentEpisode}`;
       else if (newServer === 'embedsu') newUrl = `https://embed.su/embed/tv/${mediaId}/${currentSeason}/${currentEpisode}`;
       else if (newServer === 'autoembed') newUrl = `https://autoembed.cc/embed/player.php?id=${mediaId}&s=${currentSeason}&e=${currentEpisode}`;
       else newUrl = `https://vidlink.pro/tv/${mediaId}/${currentSeason}/${currentEpisode}?primaryColor=6366f1&autoplay=false`;
     } else {
-      if (newServer === 'vidsrc') newUrl = `https://vidsrc.pro/embed/movie/${mediaId}`;
+      if (newServer === 'vidsrc') newUrl = `https://vidsrc.cc/v2/embed/movie/${mediaId}`;
       else if (newServer === 'embedsu') newUrl = `https://embed.su/embed/movie/${mediaId}`;
       else if (newServer === 'autoembed') newUrl = `https://autoembed.cc/embed/player.php?id=${mediaId}`;
       else newUrl = `https://vidlink.pro/movie/${mediaId}?primaryColor=6366f1&autoplay=false`;
