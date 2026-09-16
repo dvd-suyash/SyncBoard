@@ -16,6 +16,7 @@ export function MovieSearchModal({ isOpen, onClose }: MovieSearchModalProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [server, setServer] = useState<'vidsrc' | 'embedsu' | 'vidlink' | 'autoembed'>('vidsrc');
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,9 +36,19 @@ export function MovieSearchModal({ isOpen, onClose }: MovieSearchModalProps) {
   const spawnMovie = (item: any) => {
     const state = useBoardStore.getState();
     const isTv = item.media_type === 'tv';
-    const url = isTv 
-      ? `https://vidlink.pro/tv/${item.id}/1/1?primaryColor=6366f1&autoplay=false` 
-      : `https://vidlink.pro/movie/${item.id}?primaryColor=6366f1&autoplay=false`;
+    
+    let url = '';
+    if (server === 'vidsrc') {
+      url = isTv ? `https://vidsrc.pro/embed/tv/${item.id}/1/1` : `https://vidsrc.pro/embed/movie/${item.id}`;
+    } else if (server === 'embedsu') {
+      url = isTv ? `https://embed.su/embed/tv/${item.id}/1/1` : `https://embed.su/embed/movie/${item.id}`;
+    } else if (server === 'autoembed') {
+      url = isTv ? `https://autoembed.cc/embed/player.php?id=${item.id}&s=1&e=1` : `https://autoembed.cc/embed/player.php?id=${item.id}`;
+    } else {
+      url = isTv 
+        ? `https://vidlink.pro/tv/${item.id}/1/1?primaryColor=6366f1&autoplay=false` 
+        : `https://vidlink.pro/movie/${item.id}?primaryColor=6366f1&autoplay=false`;
+    }
 
     const worldPt = screenToWorld({ x: window.innerWidth / 2, y: window.innerHeight / 2 }, state.camera);
 
@@ -63,7 +74,7 @@ export function MovieSearchModal({ isOpen, onClose }: MovieSearchModalProps) {
     commandManager.pushCommand(new AddElementCommand(iframeEl as any));
     onClose();
     toast.success(`Spawned ${item.title || item.name}!`, {
-      description: 'Double click the video player to access playback controls (Play, Pause, etc).'
+      description: 'Double click the video player to access playback controls.'
     });
   };
 
@@ -78,6 +89,18 @@ export function MovieSearchModal({ isOpen, onClose }: MovieSearchModalProps) {
               <Clapperboard className="w-6 h-6" />
             </div>
             <h2 className="text-2xl font-black text-slate-100">Media Library</h2>
+            <div className="ml-4 border-l border-slate-700 pl-4 hidden sm:block">
+              <select
+                value={server}
+                onChange={(e) => setServer(e.target.value as any)}
+                className="bg-slate-800 text-slate-200 border border-slate-700 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-indigo-500"
+              >
+                <option value="vidsrc">Server 1 (VidSrc Pro)</option>
+                <option value="embedsu">Server 2 (Embed.su)</option>
+                <option value="autoembed">Server 3 (AutoEmbed)</option>
+                <option value="vidlink">Server 4 (VidLink)</option>
+              </select>
+            </div>
           </div>
           <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded-full transition-colors">
             <X className="w-5 h-5" />
@@ -86,6 +109,19 @@ export function MovieSearchModal({ isOpen, onClose }: MovieSearchModalProps) {
 
         <div className="p-6 overflow-y-auto flex-1">
             <div className="space-y-6">
+              <div className="sm:hidden mb-4">
+                <label className="text-sm text-slate-400 block mb-2">Streaming Server</label>
+                <select
+                  value={server}
+                  onChange={(e) => setServer(e.target.value as any)}
+                  className="w-full bg-slate-800 text-slate-200 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500"
+                >
+                  <option value="vidsrc">Server 1 (VidSrc Pro)</option>
+                  <option value="embedsu">Server 2 (Embed.su)</option>
+                  <option value="autoembed">Server 3 (AutoEmbed)</option>
+                  <option value="vidlink">Server 4 (VidLink)</option>
+                </select>
+              </div>
               <form onSubmit={handleSearch} className="relative">
                 <input
                   type="text"
